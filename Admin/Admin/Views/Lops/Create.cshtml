@@ -1,0 +1,74 @@
+﻿@model Admin.Models.Lop
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Lop</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="Lop">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TenLop" class="control-label"></label>
+                <input asp-for="TenLop" class="form-control" id="TenLop"/>
+                <span asp-validation-for="TenLop" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SoLuongSV" class="control-label"></label>
+                <input asp-for="SoLuongSV" id="SoLuongSV" class="form-control" min="1" />
+                <span asp-validation-for="SoLuongSV" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TrangThai" /> @Html.DisplayNameFor(model => model.TrangThai)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+    $().ready(function () {
+        $("#Lop").validate({
+            onfocusout: false,
+            onkeyup: false,
+            onclick: false,
+            rules: {
+                "TenLop": {
+                    required: true,
+                    maxlength: 15
+                },
+                "SoLuongSV":
+                {
+                    required: true
+                },
+               
+            },
+            messages:
+            {
+                "TenLop": {
+                    required: "Tên lớp không được bỏ trống"
+
+                },
+                "SoLuongSV":
+                {
+                    required: "Số lượng không được bỏ trống"
+                },
+              
+            }
+        });
+    });
+</script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

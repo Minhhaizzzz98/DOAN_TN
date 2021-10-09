@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Admin.ModelJoin.GiangVienJoin>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GiangVien.TenGiangVien)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GiangVien.DiaChi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GiangVien.SoDienThoai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GiangVien.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GiangVien.TrangThai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GiangVien.IsAdmin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TaiKhoan.UserName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiangVien.TenGiangVien)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiangVien.DiaChi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiangVien.SoDienThoai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiangVien.Email)
+                </td>
+                <td>
+                    @if (item.GiangVien.TrangThai)
+                    {
+                        <button type="button" class="btn btn-success">Hoạt động</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-secondary">Không hoạt động</button>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GiangVien.IsAdmin)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaiKhoan.UserName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.GiangVien.MaGiangVien">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.GiangVien.MaGiangVien">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.GiangVien.MaGiangVien">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+    });
+</script>

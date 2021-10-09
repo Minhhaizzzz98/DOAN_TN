@@ -1,0 +1,131 @@
+﻿@model Admin.Models.CauHoi
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Câu Hỏi</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" id="CauHoi">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MaCauHoi" />
+            <div class="form-group">
+                <label asp-for="TenCauHoi" class="control-label"></label>
+                <input asp-for="TenCauHoi" class="form-control" id="TenCauHoi"/>
+                <span asp-validation-for="TenCauHoi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="A" class="control-label"></label>
+                <input asp-for="A" class="form-control" id="A" />
+                <span asp-validation-for="A" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="B" class="control-label"></label>
+                <input asp-for="B" class="form-control" id="B"/>
+                <span asp-validation-for="B" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="C" class="control-label"></label>
+                <input asp-for="C" class="form-control" id="C"/>
+                <span asp-validation-for="C" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="D" class="control-label"></label>
+                <input asp-for="D" class="form-control" id="D"/>
+                <span asp-validation-for="D" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DapAn" class="control-label"></label>
+                <input asp-for="DapAn" class="form-control" id="DapAn"/>
+                <span asp-validation-for="DapAn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaChuDe" class="control-label"></label>
+                <select asp-for="MaChuDe" class="form-control" asp-items="ViewBag.ChuDeId">
+                </select>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TrangThai" /> @Html.DisplayNameFor(model => model.TrangThai)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script>
+    $().ready(function () {
+        $("#CauHoi").validate({
+            onfocusout: false,
+            onkeyup: false,
+            onclick: false,
+            rules: {
+                "TenCauHoi": {
+                    required: true,
+                    maxlength: 15
+                },
+                "A":
+                {
+                    required: true
+                },
+                "B":
+                {
+                    required:true
+                },
+                "C":
+                {
+                    required: true
+                },
+                "D":
+                {
+                    required: true
+                },
+                "DapAn":
+                {
+                    required : true
+                }
+            },
+            messages:
+            {
+                "TenCauHoi": {
+                    required: "Tên câu hỏi không được bỏ trống"
+
+                },
+                "A":
+                {
+                    required: "Đáp án A không được bỏ trống"
+                },
+                "B":
+                {
+                    required: "Đáp án B không được bỏ trống"
+                },
+                "C":
+                {
+                    required: "Đáp án C không được bỏ trống"
+                },
+                "D":
+                {
+                    required: "Đáp án D không được bỏ trống"
+                },
+                "DapAn":
+                {
+                    required: "Đáp án  đúng không được bỏ trống"
+                }
+            }
+        });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

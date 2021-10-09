@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Admin.ModelJoin.CauHoiJoinChuDe>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+<div class="topnav">
+    <a asp-action="Create">Create New</a>
+    <div class="float-right-bar">
+        @using (Html.BeginForm("Search", "CauHois", FormMethod.Post))
+        {
+            <input id="inputKeyword" name="inputKeyword" type="text" placeholder="Search.." />
+            <a asp-action="Search">
+                <input type="submit" asp-action="Search" value="Search" />
+            </a>
+        }
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <h3>Không tìm thấy kết quả</h3>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Tên câu hỏi
+                </th>
+                <th>
+                    Đáp án A
+                </th>
+                <th>
+                    Đáp án B
+                </th>
+                <th>
+                    Đáp án C
+                </th>
+                <th>
+                    Đáp án D
+                </th>
+                <th>
+                    Đáp án đúng
+                </th>
+                <th>
+                    Chủ đề
+                </th>
+                <th>
+                    Trạng thái
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CauHoi.TenCauHoi)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CauHoi.A)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CauHoi.B)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CauHoi.C)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CauHoi.D)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CauHoi.DapAn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ChuDe.TenChuDe)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CauHoi.TrangThai)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.CauHoi.MaCauHoi">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.CauHoi.MaCauHoi">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.CauHoi.MaCauHoi">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

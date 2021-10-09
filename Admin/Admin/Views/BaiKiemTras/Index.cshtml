@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Admin.Models.BaiKiemTra>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TenBaiKT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KeyBaiKT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ngay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaGiangVien)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaLopHocPhan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrangThai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ThoiGianLam)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenBaiKT)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KeyBaiKT)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ngay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaGiangVien)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaLopHocPhan)
+            </td>
+            <td>
+                @if (item.TrangThai)
+                {
+                    <button type="button" class="btn btn-success">Hoạt động</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary">Không hoạt động</button>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThoiGianLam)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MaBaiKT">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MaBaiKT">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaBaiKT">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+    });
+</script>

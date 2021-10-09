@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Admin.ModelJoin.CTBKTJoin>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BaiKT.TenBaiKT)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CauHoi.TenCauHoi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CTBKT.STT)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BaiKT.TenBaiKT)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CauHoi.TenCauHoi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CTBKT.STT)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CTBKT.MaCTBaiKT">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CTBKT.MaCTBaiKT">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CTBKT.MaCTBaiKT">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+    });
+</script>

@@ -1,0 +1,55 @@
+﻿@model Admin.Models.LopHocPhan
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>LopHocPhan</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MaLopHP" />
+            <div class="form-group">
+                <label asp-for="TenLopHP" class="control-label"></label>
+                <input asp-for="TenLopHP" class="form-control" />
+                <span asp-validation-for="TenLopHP" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaGiangVien" class="control-label"></label>
+                <select asp-for="MaGiangVien" class="form-control" asp-items="ViewBag.GiangVienId">
+                </select>
+                <span asp-validation-for="MaGiangVien" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaMonHoc" class="control-label"></label>
+                <select asp-for="MaMonHoc" class="form-control" asp-items="ViewBag.MonHocId">
+                </select>
+                <span asp-validation-for="MaMonHoc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaLop" class="control-label"></label>
+                <select asp-for="MaLop" class="form-control" asp-items="ViewBag.LopId">
+                </select>
+                <span asp-validation-for="MaLop" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TrangThai" /> @Html.DisplayNameFor(model => model.TrangThai)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

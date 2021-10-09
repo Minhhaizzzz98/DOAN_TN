@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Admin.ModelJoin.ChuDeJoinMonHoc>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tên chủ đề
+            </th>
+            <th>
+                Môn học
+            </th>
+            <th>
+               Trạng thái
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ChuDe.TenChuDe </td>
+                <td>@item.MonHoc.TenMonHoc</td>
+                <td>
+                    @if (item.ChuDe.TrangThai)
+                    {
+                        <button type="button" class="btn btn-success">Hoạt động</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-secondary">Không hoạt động</button>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ChuDe.MaChuDe">Sửa</a> |
+                    <a asp-action="Details" asp-route-id="@item.ChuDe.MaChuDe">Chi tiết</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ChuDe.MaChuDe">Xóa </a>
+                </td>
+            </tr>
+          
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+    });
+</script>

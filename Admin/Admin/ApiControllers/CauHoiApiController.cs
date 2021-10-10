@@ -99,7 +99,7 @@ namespace Admin.ApiControllers
             int maGV = (int)val.MaGV;
 
             var listCT = _context.CTBaiKTs.Where(u => u.MaBaiKT == MaBaiKT).ToList();
-            var m = _context.CauHois.ToList().Where(p => !(listCT.Any(item2 => item2.CauHoi == p.MaCauHoi)) && p.MaChuDe == maCD && p.MaGV == maGV && p.TrangThai);
+            var m = _context.CauHois.OrderByDescending(u => u.MaCauHoi).ToList().Where(p => !(listCT.Any(item2 => item2.CauHoi == p.MaCauHoi)) && p.MaChuDe == maCD && p.MaGV == maGV && p.TrangThai);
             
             return Ok(m);
         }

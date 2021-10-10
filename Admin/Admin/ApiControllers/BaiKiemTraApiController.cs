@@ -53,7 +53,7 @@ namespace Admin.ApiControllers
         [HttpPost, Route("index")]
         public async Task<IActionResult> Index(dynamic val)
         {
-            int id = (int)val.MaGiangVien;
+              int id = (int)val.MaGiangVien;
             int id_lop = (int)val.MaLopHocPhan;
             var qurey = this._context.BaiKiemTras.Where(u => u.MaGiangVien == id && u.TrangThai == true && u.MaLopHocPhan == id_lop)
                 .Join(_context.LopHocPhans, b => b.MaLopHocPhan, l => l.MaLopHP, (b, l) => new
@@ -65,15 +65,16 @@ namespace Admin.ApiControllers
                 {
                     BaiKiemTra = m.b,
                     LopHocPhan = m.l
-                });
+                }).OrderByDescending(u =>u.BaiKiemTra.MaBaiKT);
             var lopHocPhan = this._context.LopHocPhans.Find(id_lop);
 
             var item = this._context.Lops.Where(u => u.MaLop == lopHocPhan.MaLop).FirstOrDefault();
             var obj = new
             {
                 list = qurey.ToArray(),
-                lop = item
-            
+                lop = item,
+                lopHocPhan = lopHocPhan
+
             };
             return Ok(obj);
 

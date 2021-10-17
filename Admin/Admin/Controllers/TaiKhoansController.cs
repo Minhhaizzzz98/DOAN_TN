@@ -50,14 +50,7 @@ namespace Admin.Controllers
         // GET: Lops/Create
         public IActionResult Create()
         {
-            List<LoaiTK> loaiTKs = new List<LoaiTK>();
-            LoaiTK loai = new LoaiTK { MaLoai = 1, TenLoai = "Giảng Viên" };
-            LoaiTK loai1 = new LoaiTK { MaLoai = 2, TenLoai = "Sinh Viên" };
-            loaiTKs.Add(loai);
-            loaiTKs.Add(loai1);
-
-            ViewData["LoaiTK"] = new SelectList(loaiTKs, "MaLoai", "TenLoai");
-
+            SetSelectListLoaiTK();
             return View();
         }
 
@@ -73,26 +66,22 @@ namespace Admin.Controllers
                 var tenTK = _context.TaiKhoans.FirstOrDefault(u => u.UserName == taikhoan.UserName);
                 if (tenTK == null)
                 {
+                    taikhoan.Password = BCrypt.Net.BCrypt.HashPassword(taikhoan.Password);
                     _context.Add(taikhoan);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
                 }
                 ModelState.AddModelError("", "Username đã tồn tại");
+                SetSelectListLoaiTK();
             }
-            return View(taikhoan);
+            return View();
         }
 
         // GET: Lops/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            List<LoaiTK> loaiTKs = new List<LoaiTK>();
-            LoaiTK loai = new LoaiTK { MaLoai = 1, TenLoai = "Giảng Viên" };
-            LoaiTK loai1 = new LoaiTK { MaLoai = 2, TenLoai = "Sinh Viên" };
-            loaiTKs.Add(loai);
-            loaiTKs.Add(loai1);
-
-            ViewData["LoaiTK"] = new SelectList(loaiTKs, "MaLoai", "TenLoai");
+            SetSelectListLoaiTK();
 
             if (id == null)
             {
@@ -123,6 +112,7 @@ namespace Admin.Controllers
             {
                 try
                 {
+                    taiKhoan.Password = BCrypt.Net.BCrypt.HashPassword(taiKhoan.Password);
                     _context.Update(taiKhoan);
                     await _context.SaveChangesAsync();
                 }
@@ -165,9 +155,9 @@ namespace Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var lop = await _context.TaiKhoans.FindAsync(id);
-            _context.TaiKhoans.Remove(lop);
-            await _context.SaveChangesAsync();
+            var taiKhoan = await _context.TaiKhoans.FindAsync(id);
+            taiKhoan.TrangThai = false;
+            _context.Update(taiKhoan); await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -176,6 +166,16 @@ namespace Admin.Controllers
             return _context.TaiKhoans.Any(e => e.Id == id);
         }
 
+        private void SetSelectListLoaiTK()
+        {
+            List<LoaiTK> loaiTKs = new List<LoaiTK>();
+            LoaiTK loai = new LoaiTK { MaLoai = 1, TenLoai = "Giảng Viên" };
+            LoaiTK loai1 = new LoaiTK { MaLoai = 2, TenLoai = "Sinh Viên" };
+            loaiTKs.Add(loai);
+            loaiTKs.Add(loai1);
+
+            ViewData["LoaiTK"] = new SelectList(loaiTKs, "MaLoai", "TenLoai");
+        }
     }
 
 }

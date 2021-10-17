@@ -64,10 +64,11 @@ namespace Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaLopHP,TenLopHP,MaGiangVien,MaMonHoc,MaLop,TrangThai")] LopHocPhan lopHocPhan)
+        public async Task<IActionResult> Create([Bind("MaLopHP,TenLopHP,MaGiangVien,MaMonHoc,MaLop")] LopHocPhan lopHocPhan)
         {
             if (ModelState.IsValid)
             {
+                lopHocPhan.TrangThai = 1;
                 _context.Add(lopHocPhan);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -154,7 +155,8 @@ namespace Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var lopHocPhan = await _context.LopHocPhans.FindAsync(id);
-            _context.LopHocPhans.Remove(lopHocPhan);
+            lopHocPhan.TrangThai = 0;
+            _context.Update(lopHocPhan);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -181,7 +183,6 @@ namespace Admin.Controllers
 
             return View(lopHPs);
         }
-
         private bool LopHocPhanExists(int id)
         {
             return _context.LopHocPhans.Any(e => e.MaLopHP == id);

@@ -150,7 +150,8 @@ namespace Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var chuDe = await _context.ChuDes.FindAsync(id);
-            _context.ChuDes.Remove(chuDe);
+            chuDe.TrangThai = false;
+            _context.Update(chuDe);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

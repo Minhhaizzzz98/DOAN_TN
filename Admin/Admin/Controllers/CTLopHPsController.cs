@@ -147,8 +147,8 @@ namespace Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var cTLopHP = await _context.CTLopHPs.FindAsync(id);
-            _context.CTLopHPs.Remove(cTLopHP);
-            await _context.SaveChangesAsync();
+            cTLopHP.Status = false;
+            _context.Update(cTLopHP); await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

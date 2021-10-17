@@ -11,18 +11,6 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-@*<div class="topnav">
-    <a asp-action="Create">Create New</a>
-    <div class="float-right-bar">
-        @using (Html.BeginForm("Search", "LopHocPhans", FormMethod.Post))
-        {
-            <input id="inputKeyword" name="inputKeyword" type="text" placeholder="Search.." />
-            <a asp-action="Search">
-                <input type="submit" asp-action="Search" value="Search" />
-            </a>
-        }
-    </div>
-</div>*@
 <table class="table">
     <thead>
         <tr>
@@ -61,13 +49,13 @@
                     @Html.DisplayFor(modelItem => item.Lop.TenLop)
                 </td>
                 <td>
-                    @if (item.LopHocPhan.TrangThai ==1)
+                    @if (item.LopHocPhan.TrangThai == 1)
                     {
-                        <button type="button" class="btn btn-success">Hoạt động</button>
+                        <button type="submit" class="btn btn-success">Hoạt động</button>
                     }
                     else
                     {
-                        <button type="button" class="btn btn-secondary">Không hoạt động</button>
+                        <button type="submit" class="btn btn-secondary">Không hoạt động</button>
                     }
                 </td>
                 <td>

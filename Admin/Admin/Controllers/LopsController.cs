@@ -140,7 +140,8 @@ namespace Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var lop = await _context.Lops.FindAsync(id);
-            _context.Lops.Remove(lop);
+            lop.TrangThai = false;
+            _context.Update(lop); 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

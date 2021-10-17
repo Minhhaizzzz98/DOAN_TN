@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>Chỉnh sửa</h1>
 
-<h4>LopHocPhan</h4>
+<h4>Lớp học phần</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -36,11 +36,6 @@
                 <select asp-for="MaLop" class="form-control" asp-items="ViewBag.LopId">
                 </select>
                 <span asp-validation-for="MaLop" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="TrangThai" /> @Html.DisplayNameFor(model => model.TrangThai)
-                </label>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

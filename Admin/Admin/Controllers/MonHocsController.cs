@@ -140,8 +140,8 @@ namespace Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var monHoc = await _context.MonHocs.FindAsync(id);
-            _context.MonHocs.Remove(monHoc);
-            await _context.SaveChangesAsync();
+            monHoc.TrangThai = false;
+            _context.Update(monHoc); await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

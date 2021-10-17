@@ -146,8 +146,8 @@ namespace Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ketQua = await _context.KetQuas.FindAsync(id);
-            _context.KetQuas.Remove(ketQua);
-            await _context.SaveChangesAsync();
+            ketQua.TrangThai = false;
+            _context.Update(ketQua); await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

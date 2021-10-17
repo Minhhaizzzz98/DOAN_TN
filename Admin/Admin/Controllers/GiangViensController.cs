@@ -178,8 +178,8 @@ namespace Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var giangVien = await _context.GiangViens.FindAsync(id);
-            _context.GiangViens.Remove(giangVien);
-            await _context.SaveChangesAsync();
+            giangVien.TrangThai = false;
+            _context.Update(giangVien); await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

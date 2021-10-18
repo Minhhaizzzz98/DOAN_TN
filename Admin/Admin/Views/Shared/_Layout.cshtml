@@ -164,12 +164,7 @@
                     <span>Đăng xuất</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-action="Logout" asp-controller="Login">
-                    <i class="fas fa-users "></i>
-                    <span>Đăng xuất</span>
-                </a>
-            </li>
+ 
         </ul>
         <!-- End of Sidebar -->
         <!-- Content Wrapper -->
@@ -266,7 +261,7 @@
 
                 </nav>
                 <!-- End of Topbar -->
-                <div class="content--kt" style="padding-left:15px">
+                <div class="content--kt" style="padding-left:15px;min-height: 100vh;">
                     @RenderBody()
                 </div>
                
@@ -274,6 +269,7 @@
 
 
             </div>
+            <!-- End of Main Content -->
             <!-- End of Main Content -->
             <!-- Footer -->
             <footer class="sticky-footer bg-white">

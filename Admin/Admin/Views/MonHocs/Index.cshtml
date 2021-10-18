@@ -22,9 +22,6 @@
                 @Html.DisplayNameFor(model => model.SoTiet)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.TrangThai)
             </th>
             <th></th>
@@ -43,9 +40,6 @@
                 @Html.DisplayFor(modelItem => item.SoTiet)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
                 @if (item.TrangThai)
                 {
                     <button type="button" class="btn btn-success">Hoạt động</button>
@@ -56,9 +50,9 @@
                 }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.MaMonHoc">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaMonHoc">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaMonHoc">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.MaMonHoc">Sửa</a> |
+                <a asp-action="Details" asp-route-id="@item.MaMonHoc">Chi tiết</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaMonHoc">Xóa</a>
             </td>
         </tr>
 }

@@ -26,6 +26,10 @@ namespace Admin.ApiControllers
             var baiKTra = this._context.BaiKiemTras.Where(u => u.KeyBaiKT == key).FirstOrDefault();
             if(baiKTra != null)
             {
+                if(baiKTra.TrangThaiBatDau == false)
+                {
+                    return BadRequest("Bài kiểm tra chưa bắt đầu");
+                }                    
                 var MaSV = (int)val.MaSV;
                 var ketQua = this._context.KetQuas.Where(u => u.MaSinhVien == MaSV && u.MaBaiKiemTra == baiKTra.MaBaiKT).FirstOrDefault();
                 if (ketQua == null)

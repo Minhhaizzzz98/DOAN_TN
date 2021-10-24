@@ -53,6 +53,7 @@ namespace Admin.Controllers
         public IActionResult Create()
         {
             SetSelectListLoai();
+            
             return View();
         }
 

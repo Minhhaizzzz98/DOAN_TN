@@ -11,27 +11,27 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" id="SinhVien">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MaSV" />
             <div class="form-group">
                 <label asp-for="TenSV" class="control-label"></label>
-                <input asp-for="TenSV" class="form-control" />
+                <input asp-for="TenSV" id="TenSV" class="form-control" />
                 <span asp-validation-for="TenSV" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DiaChi" class="control-label"></label>
-                <input asp-for="DiaChi" class="form-control" />
+                <input asp-for="DiaChi" id="DiaChi" class="form-control" />
                 <span asp-validation-for="DiaChi" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SoDienThoai" class="control-label"></label>
-                <input asp-for="SoDienThoai" class="form-control" />
+                <input asp-for="SoDienThoai" id="SoDienThoai" class="form-control" />
                 <span asp-validation-for="SoDienThoai" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" id="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -41,18 +41,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Lop" class="control-label"></label>
-                <select asp-for="Lop" class="form-control" asp-items="ViewBag.LopId">
+                <select asp-for="Lop" id="Lop" class="form-control" asp-items="ViewBag.LopId">
                 </select>
                 <span asp-validation-for="Lop" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MaTaiKhoan" class="control-label"></label>
-                <select asp-for="MaTaiKhoan" class="form-control" asp-items="ViewBag.TaiKhoanId" readonly="">
+                <label class="control-label">Tài khoản</label>
+                <select asp-for="MaTaiKhoan" id="MaTaiKhoan" class="form-control" asp-items="ViewBag.TaiKhoanId" readonly="">
                 </select>
                 <span asp-validation-for="MaTaiKhoan" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Lưu" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -62,3 +62,67 @@
     <a asp-action="Index">Danh sách</a>
 </div>
 
+<script>
+    $().ready(function () {
+        $("#SinhVien").validate({
+            onfocusout: false,
+            onkeyup: false,
+            onclick: false,
+            rules: {
+                "TenSV": {
+                    required: true,
+                },
+                "DiaChi":
+                {
+                    required: true
+                },
+                "Email":
+                {
+                    required:true
+                },
+                "SoDienThoai":
+                {
+                    required: true
+                },
+                "Lop":
+                {
+                    required: true
+                },
+                "MaTaiKhoan":
+                {
+                    required : true
+                }
+            },
+            messages:
+            {
+                "TenSV": {
+                    required: "Tên sinh viên không được bỏ trống"
+
+                },
+                "DiaChi":
+                {
+                    required: "Địa chỉ không được bỏ trống"
+                },
+                "Email":
+                {
+                    required: "Email không được bỏ trống"
+                },
+                "SoDienThoai":
+                {
+                    required: "Số điện thoại không được bỏ trống"
+                },
+                "Lop":
+                {
+                    required: "Lớp không được bỏ trống"
+                },
+                "MaTaiKhoan":
+                {
+                    required: "Tài khoản  đúng không được bỏ trống"
+                }
+            }
+        });
+    });
+</script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

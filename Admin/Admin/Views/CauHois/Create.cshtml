@@ -71,7 +71,7 @@
             rules: {
                 "TenCauHoi": {
                     required: true,
-                    maxlength: 15
+                    maxlength: 255
                 },
                 "A":
                 {
@@ -92,7 +92,10 @@
                 "DapAn":
                 {
                     required : true
-                }
+                },
+                "MaChuDe": {
+                    required: true,
+                },
             },
             messages:
             {
@@ -118,7 +121,11 @@
                 },
                 "DapAn":
                 {
-                    required: "Đáp án  đúng không được bỏ trống"
+                    required: "Đáp án đúng không được bỏ trống"
+                },
+                "MaChuDe":
+                {
+                    required: "Mã chủ đề không được bỏ trống"
                 }
             }
         });

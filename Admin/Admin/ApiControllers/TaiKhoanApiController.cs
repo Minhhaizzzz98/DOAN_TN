@@ -21,7 +21,8 @@ namespace Admin.ApiControllers
         }
 
         [Route("DoiMatKhau")]
-        public ActionResult<TaiKhoan> DoiMatKhau(dynamic value) {
+        public ActionResult<TaiKhoan> DoiMatKhau(dynamic value)
+        {
             try
             {
                 string oldPassword = RevertPassword((string)value.oldPassword);
@@ -29,7 +30,7 @@ namespace Admin.ApiControllers
                 string role = (string)value.role;
                 int id = (int)value.id;
 
-                var hashOldPassword = BCrypt.Net.BCrypt.HashPassword(oldPassword);
+                //var hashOldPassword = BCrypt.Net.BCrypt.HashPassword(oldPassword);
                 var hashNewPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
                 if (role == "gv")
@@ -46,10 +47,14 @@ namespace Admin.ApiControllers
                     if (data != null)
                     {
                         TaiKhoan taiKhoan = _context.TaiKhoans.Where(u => u.Id == data.tkId).FirstOrDefault();
-                        taiKhoan.Password = hashNewPassword;
-                        _context.TaiKhoans.Update(taiKhoan);
-                        _context.SaveChanges();
-                        return Ok("OK");
+                        bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, taiKhoan.Password);
+                        if (verified)
+                        {
+                            taiKhoan.Password = hashNewPassword;
+                            _context.TaiKhoans.Update(taiKhoan);
+                            _context.SaveChanges();
+                            return Ok("OK");
+                        }
                     }
                 }
                 else if (role == "sv")
@@ -66,21 +71,23 @@ namespace Admin.ApiControllers
 
                     if (data != null)
                     {
-                        _context.TaiKhoans.Update(new TaiKhoan
+                        TaiKhoan taiKhoan = _context.TaiKhoans.Where(u => u.Id == data.tkId).FirstOrDefault();
+                        bool verified = BCrypt.Net.BCrypt.Verify(oldPassword, taiKhoan.Password);
+                        if (verified)
                         {
-                            Id = data.tkId,
-                            Password = hashNewPassword
-                        });
-                        _context.SaveChanges();
-                        return Ok("OK");
+                            taiKhoan.Password = hashNewPassword;
+                            _context.TaiKhoans.Update(taiKhoan);
+                            _context.SaveChanges();
+                            return Ok("OK");
+                        }
                     }
                 }
-                return BadRequest("Failed");
+                return BadRequest("The old password is not correct!");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
-            }  
+            }
         }
 
         private string RevertPassword(string password)
@@ -90,7 +97,7 @@ namespace Admin.ApiControllers
                 return null;
             }
             string newPassword = String.Empty;
-            for (int i = password.Length-1; i >= 0; i--)
+            for (int i = password.Length - 1; i >= 0; i--)
             {
                 newPassword += password[i];
             }

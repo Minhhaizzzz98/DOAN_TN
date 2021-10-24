@@ -68,6 +68,8 @@ namespace Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var idAdminCookie = HttpContext.Request.Cookies.FirstOrDefault(u => u.Key == "idAdmin");
+                chuDe.MaGV = int.Parse(idAdminCookie.Value);
                 _context.Add(chuDe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

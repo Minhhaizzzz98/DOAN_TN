@@ -82,7 +82,7 @@ namespace Admin.Controllers
             //}
             var userName = collection["username"].ToString();
             var pass = collection["pass"].ToString();
-            var TaiKhoan = _dbContext.TaiKhoans.Where(u => u.UserName == userName).FirstOrDefault();
+            var TaiKhoan = _dbContext.TaiKhoans.Where(u => u.UserName == userName && u.TrangThai).FirstOrDefault();
             if(TaiKhoan!=null)
             {
                 //check password
@@ -92,15 +92,16 @@ namespace Admin.Controllers
                 {
                     if (TaiKhoan.LoaiTaiKhoan == 1)
                     {
-                        GiangVien gv = _dbContext.GiangViens.FirstOrDefault(u => u.MaTaiKhoan == TaiKhoan.Id && u.IsAdmin);
+                        GiangVien gv = _dbContext.GiangViens.FirstOrDefault(u => u.MaTaiKhoan == TaiKhoan.Id && u.IsAdmin && u.TrangThai);
                         
                         if(gv != null)
                         {
                             var str = JsonConvert.SerializeObject(TaiKhoan);
                             HttpContext.Response.Cookies.Append("login", TaiKhoan.UserName);
+                            HttpContext.Response.Cookies.Append("idAdmin", TaiKhoan.Id.ToString());
                             return Redirect("~/Home/Index");
                         }
-                        ViewData["Message"] = "This account should have admin rights!";
+                        ViewData["Message"] = "This lecturer should be active and has admin rights!";
                         return View();
                     }
                     else
@@ -121,6 +122,7 @@ namespace Admin.Controllers
 
         public void Logout() {
             HttpContext.Response.Cookies.Delete("login");
+            HttpContext.Response.Cookies.Delete("idAdmin");
             HttpContext.Response.Redirect("/Login/UserLogin");
         }
     }

@@ -10,21 +10,21 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" id="MonHoc">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="TenMonHoc" class="control-label"></label>
-                <input asp-for="TenMonHoc" class="form-control" />
+                <input asp-for="TenMonHoc" id="TenMonHoc" class="form-control" />
                 <span asp-validation-for="TenMonHoc" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SoTinChi" class="control-label"></label>
-                <input asp-for="SoTinChi" class="form-control" />
+                <input asp-for="SoTinChi" id="SoTinChi" class="form-control" />
                 <span asp-validation-for="SoTinChi" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SoTiet" class="control-label"></label>
-                <input asp-for="SoTiet" class="form-control" />
+                <input asp-for="SoTiet" id="SoTiet" class="form-control" />
                 <span asp-validation-for="SoTiet" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -33,7 +33,7 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -42,6 +42,45 @@
 <div>
     <a asp-action="Index">Danh sách</a>
 </div>
+
+
+
+<script>
+    $().ready(function () {
+        $("#MonHoc").validate({
+            onfocusout: false,
+            onkeyup: false,
+            onclick: false,
+            rules: {
+                "TenMonHoc": {
+                    required: true,
+                },
+                "SoTinChi": {
+                    required: true,
+                },
+                "SoTiet": {
+                    required: true,
+                }
+            },
+            messages:
+            {
+                "TenMonHoc":
+                {
+                    required: "Tên môn học không được bỏ trống"
+                },
+                "SoTinChi":
+                {
+                    required: "Số tín chỉ không được bỏ trống"
+                },
+                "SoTiet":
+                {
+                    required: "Số tiết không được bỏ trống"
+                },
+            }
+        });
+    });
+</script>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

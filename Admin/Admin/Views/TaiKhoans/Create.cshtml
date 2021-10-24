@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" id="Username" />
+                <input asp-for="UserName" class="form-control" id="UserName" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,7 +55,7 @@
             onclick: false,
 
             rules: {
-                "Username": {
+                "UserName": {
                     required: true,
                     maxlength: 15
                 },
@@ -72,9 +72,12 @@
             },
             messages:
             {
-                "Username": {
+                "UserName": {
                     required: "Username không được bỏ trống"
 
+                },
+                "Password": {
+                    required: "Password không được bỏ trống"
                 },
                 "LoaiTK":
                 {

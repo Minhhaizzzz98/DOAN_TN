@@ -52,9 +52,9 @@ namespace Admin.Controllers
         // GET: LopHocPhans/Create
         public IActionResult Create()
         {
-            ViewData["LopId"] = new SelectList(_context.Lops.ToList(), "MaLop", "TenLop");
-            ViewData["MonHocId"] = new SelectList(_context.MonHocs.ToList(), "MaMonHoc", "TenMonHoc");
-            ViewData["GiangVienId"] = new SelectList(_context.GiangViens.ToList(), "MaGiangVien", "TenGiangVien");
+            ViewData["LopId"] = new SelectList(_context.Lops.Where(u => u.TrangThai ==true ).ToList(), "MaLop", "TenLop");
+            ViewData["MonHocId"] = new SelectList(_context.MonHocs.Where(u => u.TrangThai == true ).ToList(), "MaMonHoc", "TenMonHoc");
+            ViewData["GiangVienId"] = new SelectList(_context.GiangViens.Where(u => u.TrangThai ==true).ToList(), "MaGiangVien", "TenGiangVien");
 
             return View();
         }

@@ -13,28 +13,28 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="TenBaiKT" class="control-label"></label>
-                <input asp-for="TenBaiKT" class="form-control" />
+                <input asp-for="TenBaiKT" id="TenBaiKT" class="form-control" />
                 <span asp-validation-for="TenBaiKT" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="KeyBaiKT" class="control-label"></label>
-                <input asp-for="KeyBaiKT" class="form-control" />
+                <input asp-for="KeyBaiKT" id="KeyBaiKT" class="form-control" />
                 <span asp-validation-for="KeyBaiKT" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="Ngay" class="control-label"></label>
-                <input asp-for="Ngay" class="form-control" />
+                <input asp-for="Ngay" id="Ngay" class="form-control" />
                 <span asp-validation-for="Ngay" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MaGiangVien" class="control-label"></label>
-                <select asp-for="MaGiangVien" class="form-control" asp-items="ViewBag.GiangVienId">
+                <select asp-for="MaGiangVien" id="MaGiangVien" class="form-control" asp-items="ViewBag.GiangVienId">
                 </select>
                 <span asp-validation-for="MaGiangVien" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MaLopHocPhan" class="control-label"></label>
-                <select asp-for="MaLopHocPhan" class="form-control" asp-items="ViewBag.LopHPId">
+                <select asp-for="MaLopHocPhan" id="MaLopHocPhan" class="form-control" asp-items="ViewBag.LopHPId">
                 </select>
                 <span asp-validation-for="MaLopHocPhan" class="text-danger"></span>
             </div>
@@ -45,11 +45,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="ThoiGianLam" class="control-label"></label>
-                <input asp-for="ThoiGianLam" class="form-control" />
+                <input asp-for="ThoiGianLam" id="ThoiGianLam"class="form-control" />
                 <span asp-validation-for="ThoiGianLam" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input id="submitCreate" type="submit" value="Create" class="btn btn-primary" />
+                <input id="submitCreate" type="submit" value="Tạo mới" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -67,6 +67,58 @@
     }
 </script>
 
+<script>
+        $().ready(function () {
+            $("#BaiKT").validate({
+                onfocusout: false,
+                onkeyup: false,
+                onclick: false,
+                rules: {
+                    "TenBaiKT": {
+                        required: true,
+                    },
+                    "Ngay":
+                    {
+                        required: true
+                    },
+                    "MaGiangVien":
+                    {
+                        required: true
+                    },
+                    "MaLopHocPhan":
+                    {
+                        required: true
+                    },
+                    "ThoiGianLam":
+                    {
+                        required: true
+                    }
+                },
+                messages:
+                {
+                    "TenBaiKT": {
+                        required: "Tên bài kiểm tra không được bỏ trống" ,
+                    },
+                    "Ngay":
+                    {
+                        required: "Ngày làm bài kiểm tra không được bỏ trống"
+                    },
+                    "MaGiangVien":
+                    {
+                        required: "Tên giảng viên không được bỏ trống"
+                    },
+                    "MaLopHocPhan":
+                    {
+                        required: "Lớp học phần không được bỏ trống"
+                    },
+                    "ThoiGianLam":
+                    {
+                        required: "Thời gian làm không được bỏ trống"
+                    }
+                }
+            });
+        });
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

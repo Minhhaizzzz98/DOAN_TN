@@ -50,7 +50,7 @@ namespace Admin.Controllers
         // GET: CauHois/Create
         public IActionResult Create()
         {
-            ViewData["ChuDeId"] = new SelectList(_context.ChuDes.ToList(), "MaChuDe", "TenChuDe");
+            SetSelectListLoai();
             return View();
         }
 
@@ -63,6 +63,8 @@ namespace Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var idAdminCookie = HttpContext.Request.Cookies.FirstOrDefault(u => u.Key == "idAdmin");
+                cauHoi.MaGV = int.Parse(idAdminCookie.Value);
                 _context.Add(cauHoi);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -73,7 +75,7 @@ namespace Admin.Controllers
         // GET: CauHois/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            ViewData["ChuDeId"] = new SelectList(_context.ChuDes.ToList(), "MaChuDe", "TenChuDe");
+            SetSelectListLoai();
 
             if (id == null)
             {
@@ -193,6 +195,11 @@ namespace Admin.Controllers
                        };
 
             return data;
+        }
+
+        private void SetSelectListLoai()
+        {
+            ViewData["ChuDeId"] = new SelectList(_context.ChuDes.Where(item => item.TrangThai).ToList(), "MaChuDe", "TenChuDe");
         }
     }
 }

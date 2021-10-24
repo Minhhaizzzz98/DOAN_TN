@@ -66,7 +66,7 @@ namespace Admin.Controllers
                     tkId = tk.Id,
                 });
 
-            ViewData["LopId"] = new SelectList(_context.Lops.ToList(), "MaLop", "TenLop");
+            ViewData["LopId"] = new SelectList(_context.Lops.Where(u => u.TrangThai).ToList(), "MaLop", "TenLop");
             ViewData["TaiKhoanId"] = new SelectList(tkSV.Where(u => !existedTKSV.Any(item => item.tkId == u.Id)), "Id", "UserName");
 
             return View();
@@ -91,7 +91,7 @@ namespace Admin.Controllers
         // GET: SinhViens/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            ViewData["LopId"] = new SelectList(_context.Lops.ToList(), "MaLop", "TenLop");
+            ViewData["LopId"] = new SelectList(_context.Lops.Where(u => u.TrangThai).ToList(), "MaLop", "TenLop");
 
             if (id == null)
             {

@@ -46,8 +46,7 @@ namespace Admin.Controllers
         // GET: BaiKiemTras/Create
         public IActionResult Create()
         {
-            ViewData["GiangVienId"] = new SelectList(_context.GiangViens.ToList(), "MaGiangVien", "TenGiangVien");
-            ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.ToList(), "MaLopHP", "TenLopHP");
+            SetSelectListLoai();
 
             return View();
         }
@@ -71,8 +70,7 @@ namespace Admin.Controllers
         // GET: BaiKiemTras/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            ViewData["GiangVienId"] = new SelectList(_context.GiangViens.ToList(), "MaGiangVien", "TenGiangVien");
-            ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.ToList(), "MaLopHP", "TenLopHP");
+            SetSelectListLoai();
 
             if (id == null)
             {
@@ -155,6 +153,12 @@ namespace Admin.Controllers
         private bool BaiKiemTraExists(int id)
         {
             return _context.BaiKiemTras.Any(e => e.MaBaiKT == id);
+        }
+
+        private void SetSelectListLoai()
+        {
+            ViewData["GiangVienId"] = new SelectList(_context.GiangViens.Where(item => item.TrangThai).ToList(), "MaGiangVien", "TenGiangVien");
+            ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.Where(item => item.TrangThai == 1).ToList(), "MaLopHP", "TenLopHP");
         }
     }
 }

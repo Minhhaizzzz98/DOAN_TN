@@ -49,8 +49,7 @@ namespace Admin.Controllers
         // GET: CTLopHPs/Create
         public IActionResult Create()
         {
-            ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.ToList(), "MaLopHP", "TenLopHP");
-
+            SetSelectListLoai();
             return View();
         }
         
@@ -73,7 +72,7 @@ namespace Admin.Controllers
         // GET: CTLopHPs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.ToList(), "MaLopHP", "TenLopHP");
+            SetSelectListLoai();
 
             if (id == null)
             {
@@ -188,6 +187,11 @@ namespace Admin.Controllers
                        };
 
             return (data);
+        }
+
+        private void SetSelectListLoai()
+        {
+            ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.Where(u => u.TrangThai == 1).ToList(), "MaLopHP", "TenLopHP");
         }
     }
 }

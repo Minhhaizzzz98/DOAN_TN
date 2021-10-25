@@ -48,9 +48,7 @@ namespace Admin.Controllers
         // GET: CTBaiKTs/Create
         public IActionResult Create()
         {
-            ViewData["CauHoiId"] = new SelectList(_context.CauHois.ToList(), "MaCauHoi", "TenCauHoi");
-            ViewData["BaiKiemTraId"] = new SelectList(_context.BaiKiemTras.ToList(), "MaBaiKT", "TenBaiKT");
-
+            SetSelectListLoai();
             return View();
         }
 
@@ -73,9 +71,7 @@ namespace Admin.Controllers
         // GET: CTBaiKTs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            ViewData["CauHoiId"] = new SelectList(_context.CauHois.ToList(), "MaCauHoi", "TenCauHoi");
-            ViewData["BaiKiemTraId"] = new SelectList(_context.BaiKiemTras.ToList(), "MaBaiKT", "TenBaiKT");
-
+            SetSelectListLoai();
             if (id == null)
             {
                 return NotFound();
@@ -175,6 +171,12 @@ namespace Admin.Controllers
                        };
 
             return data;
+        }
+
+        private void SetSelectListLoai()
+        {
+            ViewData["CauHoiId"] = new SelectList(_context.CauHois.Where(u => u.TrangThai).ToList(), "MaCauHoi", "TenCauHoi");
+            ViewData["BaiKiemTraId"] = new SelectList(_context.BaiKiemTras.Where(u => u.TrangThai && !u.IsEnd && !u.TrangThaiBatDau).ToList(), "MaBaiKT", "TenBaiKT");
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Admin.ApiControllers
             int maGV = (int)val.MaGV;
             if (maCD > 0)
             {
-                var list_cauhoi = _context.CauHois.Where(u => u.MaChuDe == maCD && u.TrangThai == true && u.MaGV == maGV).ToList();
+                var list_cauhoi = _context.CauHois.Where(u => u.MaChuDe == maCD && u.TrangThai == true && u.MaGV == maGV).OrderByDescending(u=> u.MaCauHoi).ToList();
                 return Ok(list_cauhoi);
             }
             return BadRequest();

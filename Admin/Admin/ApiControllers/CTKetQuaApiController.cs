@@ -23,14 +23,45 @@ namespace Admin.ApiControllers
         public async Task<IActionResult> LamBaiKiemTra(dynamic val)
         {
             string key = (string)val.KeyBaiKT;
+            var is_check_correct = false;
             var baiKTra = this._context.BaiKiemTras.Where(u => u.KeyBaiKT == key).FirstOrDefault();
             if(baiKTra != null)
             {
-                if(baiKTra.TrangThaiBatDau == false)
+                var MaSV = (int)val.MaSV;
+                var check_sv = this._context.SinhViens.Where(u => u.MaSV == MaSV).FirstOrDefault();
+                if(check_sv != null) {
+                    var is_lop_hoc_phan = this._context.LopHocPhans.Where(u => u.MaLopHP == baiKTra.MaLopHocPhan).FirstOrDefault();
+                    if(is_lop_hoc_phan != null)
+                    {
+                        if(check_sv.Lop == is_lop_hoc_phan.MaLop)
+                        {
+                            is_check_correct = true;
+                        }
+                        if(check_sv.Lop != is_lop_hoc_phan.MaLop)
+                        {
+                            var check_ctlhp = this._context.CTLopHPs.Where(u => u.LopHocPhanMaLopHP == is_lop_hoc_phan.MaLopHP && u.SinhVienMaSV == MaSV).FirstOrDefault();
+                            if(check_ctlhp != null)
+                            {
+                                if(check_ctlhp.SinhVienMaSV == check_sv.MaSV)
+                                {
+                                    is_check_correct = true;
+                                }
+                            }
+                      
+
+                        }
+                    }
+                    if(!is_check_correct)
+                    {
+                        return BadRequest("Key bài kiểm tra không hợp lệ");
+                    }
+                }
+    
+                if (baiKTra.TrangThaiBatDau == false)
                 {
                     return BadRequest("Bài kiểm tra chưa bắt đầu");
                 }                    
-                var MaSV = (int)val.MaSV;
+           
                 var ketQua = this._context.KetQuas.Where(u => u.MaSinhVien == MaSV && u.MaBaiKiemTra == baiKTra.MaBaiKT).FirstOrDefault();
                 if (ketQua == null)
                 {

@@ -145,11 +145,20 @@ namespace Admin.Controllers
                     Lop = m.lop1.lop
 
                 });
+
             //var listCT = _context.CTBaiKTs.Where(u => u.MaBaiKT == MaBaiKT).ToList();
 
             //var m = _context.CauHois.ToList().Where(p => !(listCT.Any(item2 => item2.CauHoi == p.MaCauHoi)));
-            var query2 = this._context.CTLopHPs.Where(u => u.MaSinhVien == sinhVien.MaSV).ToList();
-            var query3 = this._context.LopHocPhans.Where(u => (query2.Any(item => item.MaLopHocPhan == u.MaLopHP))).Join(
+
+            var query2 = this._context.CTLopHPs.Where(u => u.MaSinhVien == sinhVien.MaSV || u.SinhVienMaSV == sinhVien.MaSV).ToList();
+            if (query2 != null && query2.Count() != 0)
+            {
+
+                //var query = dataBKTChuaEnd.ToList().Where(p => !(_context.KetQuas.Any(u => u.MaBaiKiemTra == p.MaBaiKT && u.MaSinhVien == maSV)));
+                var query3 = this._context.LopHocPhans.Where(u => (_context.CTLopHPs.
+                Any(item => item.LopHocPhanMaLopHP == u.MaLopHP &&
+                 (item.MaSinhVien == sinhVien.MaSV || item.SinhVienMaSV == sinhVien.MaSV
+                )))).Join(
                 _context.Lops, lhp => lhp.MaLop, lop => lop.MaLop, (lhp, lop) => new
                 {
                     lhp,
@@ -165,7 +174,11 @@ namespace Admin.Controllers
                     Lop = m.lop1.lop
 
                 });
-            var qr4 = query.Union(query3);
+
+                var result = query3.Count();
+                var qr4 = query.Union(query3);
+                return Ok(qr4.ToArray());
+            }
             return Ok(query.ToArray());
 
 

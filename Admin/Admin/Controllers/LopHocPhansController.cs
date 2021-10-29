@@ -115,6 +115,7 @@ namespace Admin.Controllers
             {
                 try
                 {
+                    lopHocPhan.TrangThai = 1;
                     _context.Update(lopHocPhan);
                     await _context.SaveChangesAsync();
                 }

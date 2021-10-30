@@ -66,14 +66,31 @@ namespace Admin.Controllers
                     LopHocPhan = lhp
                 }).Where(u => u.LopHocPhan.TrangThai ==1).Distinct();
 
-            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.MaSinhVien == maSV && u.Status)
-                .Join(_context.LopHocPhans, ct => ct.MaLopHocPhan, lhp => lhp.MaLopHP,
+            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.SinhVienMaSV == maSV && u.Status)
+                .Join(_context.LopHocPhans, ct => ct.LopHocPhanMaLopHP, lhp => lhp.MaLopHP,
                 (ct, lhp) => new
                 {
                     LopHocPhan = lhp
                 }).Where(u => u.LopHocPhan.TrangThai ==1).Distinct();
-          
+            var countA = lhpTheoCTLHP.ToList().Count() ;
+            var countB = lhpTheoLop.ToList().Count();
+            if(countA == 0)
+            {
+                if(countB > 0)
+                {
+                    return Ok(lhpTheoLop.ToList());
+                }
+            }
+            if(countB ==0)
+            {
+                if(countA > 0)
+                {
+                    return Ok(lhpTheoCTLHP.ToList());
+                }
+            }
+
             var query = lhpTheoLop.Union(lhpTheoCTLHP);
+ 
 
             return Ok(query.ToList());
         }

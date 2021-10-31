@@ -17,6 +17,7 @@ namespace Admin.Models
         public int BaiKiemTraMaBaiKT { get; set; }
         public int CauHoiMaCauHoi { get; set; }
         public CauHoi CauHoi { get; set; }
+        [Display(Name ="Đáp án SV chọn")]
         public string DapAnSVChon { get; set; }
 
     }

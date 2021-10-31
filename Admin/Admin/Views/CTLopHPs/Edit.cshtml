@@ -21,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Sinh viên</label>
-                <input class="form-control" id="tags">
+                <input class="form-control" id="tags" value="@ViewBag.TenSV">
                 <input type="hidden" id="hfSinhVien" asp-for="SinhVienMaSV" />
 
                 <span asp-validation-for="SinhVienMaSV" class="text-danger"></span>

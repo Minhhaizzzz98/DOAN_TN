@@ -397,7 +397,7 @@ namespace Admin.ApiControllers
                     LopHocPhan = lhp
                 }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct();
 
-            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.MaSinhVien == maSV && u.Status)
+            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.SinhVienMaSV == maSV && u.Status)
                 .Join(_context.LopHocPhans, ct => ct.LopHocPhanMaLopHP, lhp => lhp.MaLopHP,
                 (ct, lhp) => new
                 {

@@ -62,9 +62,14 @@ namespace Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cTLopHP);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!GetLHPSVDaThamGia(cTLopHP.SinhVienMaSV))
+                {
+                    _context.Add(cTLopHP);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ModelState.AddModelError("", "SV đã tham gia LHP này!");
+                SetSelectListLoai();
             }
             return View(cTLopHP);
         }
@@ -73,17 +78,21 @@ namespace Admin.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             SetSelectListLoai();
-
+            
             if (id == null)
             {
                 return NotFound();
             }
 
             var cTLopHP = await _context.CTLopHPs.FindAsync(id);
-            if (cTLopHP == null)
+            var data = GetCtLHP();
+
+            if (cTLopHP == null || data.FirstOrDefault() == null)
             {
                 return NotFound();
             }
+            var result = data.AsEnumerable().FirstOrDefault(u => u.CTLopHP.MaCTLopHP == id);
+            ViewData["TenSV"] = result.SinhVien.TenSV;
             return View(cTLopHP);
         }
 
@@ -101,23 +110,14 @@ namespace Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (!GetLHPSVDaThamGia(cTLopHP.SinhVienMaSV))
                 {
                     _context.Update(cTLopHP);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CTLopHPExists(cTLopHP.MaCTLopHP))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("", "SV đã tham gia LHP này!");
+                SetSelectListLoai();
             }
             return View(cTLopHP);
         }
@@ -192,6 +192,47 @@ namespace Admin.Controllers
         private void SetSelectListLoai()
         {
             ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.Where(u => u.TrangThai == 1).ToList(), "MaLopHP", "TenLopHP");
+        }
+
+        private bool GetLHPSVDaThamGia(int maSV)
+        {
+            var lhpTheoLop = _context.SinhViens.Where(u => u.MaSV == maSV && u.TrangThai)
+                .Join(_context.Lops, sinhvien => sinhvien.Lop, lop => lop.MaLop,
+                (sinhvien, lop) => new
+                {
+                    Lop = lop
+                }).Where(u => u.Lop.TrangThai)
+                .Join(_context.LopHocPhans, lop => lop.Lop.MaLop, lhp => lhp.MaLop,
+                (lop, lhp) => new
+                {
+                    LopHocPhan = lhp
+                }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct();
+
+            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.SinhVienMaSV == maSV && u.Status)
+                .Join(_context.LopHocPhans, ct => ct.LopHocPhanMaLopHP, lhp => lhp.MaLopHP,
+                (ct, lhp) => new
+                {
+                    LopHocPhan = lhp
+                }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct();
+
+            var countA = lhpTheoCTLHP.ToList().Count();
+            var countB = lhpTheoLop.ToList().Count();
+            if (countA == 0)
+            {
+                if (countB > 0)
+                {
+                    return true;
+                }
+            }
+            if (countB == 0)
+            {
+                if (countA > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

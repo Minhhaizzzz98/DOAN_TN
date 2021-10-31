@@ -152,13 +152,13 @@ namespace Admin.ApiControllers
             int maSV = (int)val.MaSV;
             
             var query = this._context.CTBaiKTs.Where(u => u.MaBaiKT == maBaiKt).Join(this._context.CauHois,
-                b => b.CauHoi, c => c.MaCauHoi, (b, c) => new { b, c }).Select(m =>
+                b => b.CauHoi, c => c.MaCauHoi, (b, c) => new { b, c }).OrderBy(u => u.c.MaCauHoi).Select(m =>
                  new ChiTietJoinCauHoi
                  {
                      CauHoi = m.c,
                      CTBaiKT = m.b
                  });
-            var dsCauTraLoi = _context.CTKetQuas.Where(u => u.BaiKiemTraMaBaiKT == maBaiKt && u.SinhVienMaSV == maSV).Select(u => u.DapAnSVChon);
+            var dsCauTraLoi = _context.CTKetQuas.Where(u => u.BaiKiemTraMaBaiKT == maBaiKt && u.SinhVienMaSV == maSV).OrderBy(u => u.CauHoiMaCauHoi).Select(u => u.DapAnSVChon);
             return Ok(new { ChiTietBKT = query, DSCauTraLoi = dsCauTraLoi });
             //return Ok(dsCauTraLoi);
         }

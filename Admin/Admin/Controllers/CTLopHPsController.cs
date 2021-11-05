@@ -92,7 +92,7 @@ namespace Admin.Controllers
                 return NotFound();
             }
             var result = data.AsEnumerable().FirstOrDefault(u => u.CTLopHP.MaCTLopHP == id);
-            ViewData["TenSV"] = result.SinhVien.TenSV;
+            ViewData["TenSV"] = result.TaiKhoan.UserName;
             return View(cTLopHP);
         }
 
@@ -155,10 +155,11 @@ namespace Admin.Controllers
         public JsonResult AutoComplete(string prefix)
         {
             var sinhviens = (from sinhvien in _context.SinhViens
-                             where sinhvien.TenSV.Contains(prefix) && sinhvien.TrangThai
+                             join taikhoan in _context.TaiKhoans on sinhvien.MaTaiKhoan equals taikhoan.Id 
+                             where taikhoan.UserName.Contains(prefix) && sinhvien.TrangThai && taikhoan.TrangThai
                              select new
                              {
-                                 label = sinhvien.TenSV,
+                                 label = taikhoan.UserName,
                                  val = sinhvien.MaSV
                              }).ToList();
 
@@ -175,15 +176,18 @@ namespace Admin.Controllers
             List<SinhVien> sinhViens = _context.SinhViens.ToList();
             List<CTLopHP> cTLopHPs = _context.CTLopHPs.ToList();
             List<LopHocPhan> lopHocPhans = _context.LopHocPhans.ToList();
+            List<TaiKhoan> taiKhoans = _context.TaiKhoans.ToList();
 
             var data = from ct in cTLopHPs
                        join sv in sinhViens on ct.SinhVienMaSV equals sv.MaSV
                        join lhp in lopHocPhans on ct.LopHocPhanMaLopHP equals lhp.MaLopHP
+                       join tk in taiKhoans on sv.MaTaiKhoan equals tk.Id
                        select new CTLopHocPhanJoin
                        {
                            SinhVien = sv,
                            CTLopHP = ct,
-                           LopHocPhan = lhp
+                           LopHocPhan = lhp,
+                           TaiKhoan = tk
                        };
 
             return (data);

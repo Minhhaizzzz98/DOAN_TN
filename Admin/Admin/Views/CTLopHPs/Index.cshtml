@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.SinhVien.TenSV)
             </th>
             <th>
+                Mã số sinh viên
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.CTLopHP.Status)
             </th>
             <th></th>
@@ -32,6 +35,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SinhVien.TenSV)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaiKhoan.UserName)
             </td>
             <td>
                 @if (item.CTLopHP.Status)

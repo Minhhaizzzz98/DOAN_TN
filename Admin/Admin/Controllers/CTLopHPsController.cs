@@ -62,7 +62,7 @@ namespace Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!GetLHPSVDaThamGia(cTLopHP.SinhVienMaSV))
+                if (!GetLHPSVDaThamGia(cTLopHP.SinhVienMaSV, cTLopHP.LopHocPhanMaLopHP))
                 {
                     _context.Add(cTLopHP);
                     await _context.SaveChangesAsync();
@@ -110,7 +110,7 @@ namespace Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!GetLHPSVDaThamGia(cTLopHP.SinhVienMaSV))
+                if (!GetLHPSVDaThamGia(cTLopHP.SinhVienMaSV, cTLopHP.LopHocPhanMaLopHP))
                 {
                     _context.Update(cTLopHP);
                     await _context.SaveChangesAsync();
@@ -198,7 +198,7 @@ namespace Admin.Controllers
             ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.Where(u => u.TrangThai == 1).ToList(), "MaLopHP", "TenLopHP");
         }
 
-        private bool GetLHPSVDaThamGia(int maSV)
+        private bool GetLHPSVDaThamGia(int maSV, int maLHP)
         {
             var lhpTheoLop = _context.SinhViens.Where(u => u.MaSV == maSV && u.TrangThai)
                 .Join(_context.Lops, sinhvien => sinhvien.Lop, lop => lop.MaLop,
@@ -210,14 +210,14 @@ namespace Admin.Controllers
                 (lop, lhp) => new
                 {
                     LopHocPhan = lhp
-                }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct();
+                }).Where(u => u.LopHocPhan.TrangThai == 1 && u.LopHocPhan.MaLopHP == maLHP).Distinct();
 
             var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.SinhVienMaSV == maSV && u.Status)
                 .Join(_context.LopHocPhans, ct => ct.LopHocPhanMaLopHP, lhp => lhp.MaLopHP,
                 (ct, lhp) => new
                 {
                     LopHocPhan = lhp
-                }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct();
+                }).Where(u => u.LopHocPhan.TrangThai == 1 && u.LopHocPhan.MaLopHP == maLHP).Distinct();
 
             var countA = lhpTheoCTLHP.ToList().Count();
             var countB = lhpTheoLop.ToList().Count();

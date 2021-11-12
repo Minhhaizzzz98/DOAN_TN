@@ -9,5 +9,6 @@ namespace Admin.ModelJoin
     {
         public BaiKiemTra BaiKiemTra { get; set; }
         public LopHocPhan LopHocPhan { get; set; }
+        public GiangVien GiangVien { get; set; }
     }
 }

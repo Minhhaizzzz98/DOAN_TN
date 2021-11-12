@@ -37,9 +37,15 @@
                 @Html.DisplayFor(modelItem => item.CTBKT.STT)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.CTBKT.MaCTBaiKT">Sửa</a> |
-                <a asp-action="Details" asp-route-id="@item.CTBKT.MaCTBaiKT">Chi tiết</a> |
-                <a asp-action="Delete" asp-route-id="@item.CTBKT.MaCTBaiKT">Xóa</a>
+                @if (!@item.BaiKT.TrangThaiBatDau)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.CTBKT.MaCTBaiKT">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.CTBKT.MaCTBaiKT">Xóa</a>
+                }
+
+                <a asp-action="Details" asp-route-id="@item.CTBKT.MaCTBaiKT">Chi tiết</a>
+               
+
             </td>
         </tr>
 }

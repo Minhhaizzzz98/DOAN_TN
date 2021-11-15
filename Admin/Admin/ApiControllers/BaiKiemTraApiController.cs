@@ -397,8 +397,8 @@ namespace Admin.ApiControllers
                     LopHocPhan = lhp
                 }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct();
 
-            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.MaSinhVien == maSV && u.Status)
-                .Join(_context.LopHocPhans, ct => ct.MaLopHocPhan, lhp => lhp.MaLopHP,
+            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.SinhVienMaSV == maSV && u.Status)
+                .Join(_context.LopHocPhans, ct => ct.LopHocPhanMaLopHP, lhp => lhp.MaLopHP,
                 (ct, lhp) => new
                 {
                     LopHocPhan = lhp
@@ -460,6 +460,50 @@ namespace Admin.ApiControllers
                 .ToList();
 
             return Ok(bktCuaGVHomNay);
+        }
+
+        [HttpPost, Route("GetBKTDangDienRa")]
+        public IActionResult GetBKTDangDienRa(dynamic val)
+        {
+            int maSV = (int)val.MaSV;
+
+            var lhpTheoLop = _context.SinhViens.Where(u => u.MaSV == maSV && u.TrangThai)
+                .Join(_context.Lops, sinhvien => sinhvien.Lop, lop => lop.MaLop,
+                (sinhvien, lop) => new
+                {
+                    Lop = lop
+                }).Where(u => u.Lop.TrangThai)
+                .Join(_context.LopHocPhans, lop => lop.Lop.MaLop, lhp => lhp.MaLop,
+                (lop, lhp) => new
+                {
+                    LopHocPhan = lhp
+                }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct().ToList();
+
+            var lhpTheoCTLHP = _context.CTLopHPs.Where(u => u.SinhVienMaSV == maSV && u.Status)
+                .Join(_context.LopHocPhans, ct => ct.LopHocPhanMaLopHP, lhp => lhp.MaLopHP,
+                (ct, lhp) => new
+                {
+                    LopHocPhan = lhp
+                }).Where(u => u.LopHocPhan.TrangThai == 1).Distinct().ToList();
+
+            var query = lhpTheoLop.Union(lhpTheoCTLHP);
+            List<BaiKiemTra> baiKiemTras = _context.BaiKiemTras.ToList();
+            List<LopHocPhan> lopHocPhans = _context.LopHocPhans.ToList();
+
+            
+            var data = from ch in baiKiemTras
+                       where query.Any(u => u.LopHocPhan.MaLopHP == ch.MaLopHocPhan) &&
+                       ch.TrangThai == true &&
+                       ch.ThoiGianBatDau != null &&
+                       ch.TrangThaiBatDau == true &&
+                       ch.IsEnd == false
+                       join lhp in lopHocPhans on ch.MaLopHocPhan equals lhp.MaLopHP
+                       select new BaiKiemTraJoinLopHocPhan
+                       {
+                           BaiKiemTra = ch,
+                           LopHocPhan = lhp,
+                       };
+            return Ok(data);
         }
     }
 }

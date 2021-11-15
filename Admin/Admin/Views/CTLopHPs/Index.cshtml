@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Trang chủ Chi tiết lớp học phần</h1>
+<h1>Quản lý học ghép</h1>
 
 <p>
     <a asp-action="Create">Tạo mới</a>
@@ -17,6 +17,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.SinhVien.TenSV)
+            </th>
+            <th>
+                Mã số sinh viên
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CTLopHP.Status)
@@ -32,6 +35,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SinhVien.TenSV)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaiKhoan.UserName)
             </td>
             <td>
                 @if (item.CTLopHP.Status)

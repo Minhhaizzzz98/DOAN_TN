@@ -8,16 +8,23 @@ using Microsoft.EntityFrameworkCore;
 using Admin.Data;
 using Admin.Models;
 using Admin.ModelJoin;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using CsvHelper;
+using System.Globalization;
+using Microsoft.AspNetCore.Http;
 
 namespace Admin.Controllers
 {
     public class SinhViensController : Controller
     {
         private readonly ProjectContext _context;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
-        public SinhViensController(ProjectContext context)
+        public SinhViensController(ProjectContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            hostingEnvironment = environment;
         }
 
         // GET: SinhViens
@@ -172,30 +179,78 @@ namespace Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public ActionResult Search()
+        public ActionResult ImportFile()
         {
-            return View();
+            ViewData["LopId"] = new SelectList(_context.Lops.Where(u => u.TrangThai).ToList(), "MaLop", "TenLop");
+            return View(new SinhVien());
         }
 
         [HttpPost]
-        public ActionResult Search(string inputKeyword)
+        public ActionResult ImportFile(IFormFile postedFile, [Bind("Lop")] SinhVien sinhVien)
         {
-            var data = GetSinhVienJoins();
-
-            var sinhviens = data.Where(x => x.SinhVien.MaSV.ToString().Contains(inputKeyword) ||
-                                         x.SinhVien.TenSV.Contains(inputKeyword) ||
-                                         x.SinhVien.Email.Contains(inputKeyword) ||
-                                         x.SinhVien.DiaChi.Contains(inputKeyword) ||
-                                         x.SinhVien.SoDienThoai.Contains(inputKeyword) ||
-                                         x.Lop.TenLop.Contains(inputKeyword) ||
-                                         x.TaiKhoan.UserName.Contains(inputKeyword));
-
-            if (inputKeyword == null)
+            if (postedFile != null)
             {
-                return View(data);
-            }
+                string fileExtension = Path.GetExtension(postedFile.FileName);
 
-            return View(sinhviens);
+                //Validate uploaded file and return error.
+                if (fileExtension != ".csv")
+                {
+                    ViewBag.Message = "Vui lòng chọn file có định dạng .csv";
+                    ViewData["LopId"] = new SelectList(_context.Lops.Where(u => u.TrangThai).ToList(), "MaLop", "TenLop");
+                    return View();
+                }
+
+                var sinhViens = new List<SinhVien>();
+                List<string> lstFailedUsername = new List<string>();
+                using (var sreader = new StreamReader(postedFile.OpenReadStream()))
+                {
+                    //First line is header. If header is not passed in csv then we can neglect the below line.
+                    string[] headers = sreader.ReadLine().Split(',');
+                    //Loop through the records
+                    while (!sreader.EndOfStream)
+                    {
+                        string[] rows = sreader.ReadLine().Split(',');
+                        string username = rows[5].ToString();
+                        if (IsExistsUsername(username))
+                        {
+                            lstFailedUsername.Add(username);
+                            continue;
+                        }
+
+                        TaiKhoan tkCreated = CreateTKSinhVien(username);
+
+                        if (tkCreated == null)
+                        {
+                            lstFailedUsername.Add(username);
+                            continue;
+                        }
+
+                        sinhViens.Add(new SinhVien
+                        {
+                            TenSV = rows[0].ToString(),
+                            DiaChi = rows[1].ToString(),
+                            SoDienThoai = rows[2].ToString(),
+                            Email = rows[3].ToString(),
+                            Lop = sinhVien.Lop,
+                            MaTaiKhoan = tkCreated.Id,
+                            TrangThai = true,
+                        });
+                    }
+
+                    _context.AddRange(sinhViens);
+                    _context.SaveChanges();
+                }
+
+                var data = GetSinhVienJoins();
+
+                return RedirectToAction("Index", data);
+            }
+            else
+            {
+                ViewBag.Message = "Vui lòng chọn file!";
+            }
+            ViewData["LopId"] = new SelectList(_context.Lops.Where(u => u.TrangThai).ToList(), "MaLop", "TenLop");
+            return View();
         }
 
         private bool SinhVienExists(int id)
@@ -219,7 +274,45 @@ namespace Admin.Controllers
                            Lop = l
                        };
 
-            return data;
+            var dataWithoutTK = from sv in sinhViens
+                                where sv.MaTaiKhoan == 0
+                                select new SinhVienJoin
+                                {
+                                    SinhVien = sv,
+                                };
+            var result = data.Union(dataWithoutTK);
+            return result;
+        }
+
+        private string GetUniqueFileName(string fileName)
+        {
+            fileName = Path.GetFileName(fileName);
+            return Path.GetFileNameWithoutExtension(fileName)
+                      + "_"
+                      + Guid.NewGuid().ToString().Substring(0, 4)
+                      + Path.GetExtension(fileName);
+        }
+
+        private bool IsExistsUsername(string username)
+        {
+            var tenTK = _context.TaiKhoans.FirstOrDefault(u => u.UserName == username);
+
+            return tenTK != null;
+        }
+
+        private TaiKhoan CreateTKSinhVien(string username)
+        {
+            TaiKhoan tk = new TaiKhoan
+            {
+                LoaiTaiKhoan = 2,
+                UserName = username,
+                Password = BCrypt.Net.BCrypt.HashPassword("123456"),
+                TrangThai = true,
+            };
+            _context.Add(tk);
+            _context.SaveChanges();
+
+            return _context.TaiKhoans.FirstOrDefault(u => u.UserName == username);
         }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Admin.Data;
 using Admin.Models;
-
+using Admin.ModelJoin;
 namespace Admin.Controllers
 {
     public class BaiKiemTrasController : Controller
@@ -22,7 +22,20 @@ namespace Admin.Controllers
         // GET: BaiKiemTras
         public async Task<IActionResult> Index()
         {
-            return View(await _context.BaiKiemTras.ToListAsync());
+            List<BaiKiemTra> bkts = _context.BaiKiemTras.ToList();
+            List<GiangVien> gvs = _context.GiangViens.ToList();
+            List<LopHocPhan> lhps = _context.LopHocPhans.ToList();
+            var data = from bkt in bkts
+                       join gv in gvs on bkt.MaGiangVien equals gv.MaGiangVien
+                       join lhp in lhps on bkt.MaLopHocPhan equals lhp.MaLopHP
+                       select new BaiKiemTraJoinLopHocPhan
+                       {
+                           BaiKiemTra = bkt,
+
+                           GiangVien = gv,
+                           LopHocPhan = lhp
+                       };
+            return View(data);
         }
 
         // GET: BaiKiemTras/Details/5
@@ -60,6 +73,26 @@ namespace Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                string key = String.Empty;
+                List<string> listKey = this._context.BaiKiemTras.Select(u => u.KeyBaiKT).ToList();
+                bool f = true;
+                do
+                {
+
+                    key = this.generateCode(6);
+
+                    for (int i = 0; i < listKey.Count(); i++)
+                    {
+                        if ( key == listKey[i])
+                        {
+                            f = false;
+                            break;
+                        }
+                    }
+                } while (f == false);
+                baiKiemTra.KeyBaiKT = key;
+                DateTime dt = DateTime.Parse(baiKiemTra.Ngay.ToString());
+                baiKiemTra.ThoiGianBatDau = dt.ToString("HH:mm");
                 _context.Add(baiKiemTra);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -101,6 +134,8 @@ namespace Admin.Controllers
             {
                 try
                 {
+                    DateTime dt = DateTime.Parse(baiKiemTra.Ngay.ToString());
+                    baiKiemTra.ThoiGianBatDau = dt.ToString("HH:mm");
                     _context.Update(baiKiemTra);
                     await _context.SaveChangesAsync();
                 }
@@ -159,6 +194,13 @@ namespace Admin.Controllers
         {
             ViewData["GiangVienId"] = new SelectList(_context.GiangViens.Where(item => item.TrangThai).ToList(), "MaGiangVien", "TenGiangVien");
             ViewData["LopHPId"] = new SelectList(_context.LopHocPhans.Where(item => item.TrangThai == 1).ToList(), "MaLopHP", "TenLopHP");
+        }
+        private string generateCode(int len)
+        {
+            var random = new Random();
+            string chars = "abcdefghijklmnopqrstubwsyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            return new string(Enumerable.Repeat(chars, len)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

@@ -68,9 +68,13 @@
                 @Html.DisplayFor(modelItem => item.ThoiGianLam)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.MaBaiKT">Sửa</a> |
+                @if (!item.TrangThaiBatDau)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.MaBaiKT">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaBaiKT">Xóa</a>
+                }
+                |
                 <a asp-action="Details" asp-route-id="@item.MaBaiKT">Chi tiết</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaBaiKT">Xóa</a>
             </td>
         </tr>
 }

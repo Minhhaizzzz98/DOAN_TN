@@ -45,38 +45,42 @@ namespace Admin.ApiControllers
             int soCauDung = 0;
             int tongCH = 0;
             float soDiem = 0;
-
-            var listCTKQ = _context.CTKetQuas.Where(u => u.SinhVienMaSV == maSV && u.BaiKiemTraMaBaiKT == maBKT).ToList();
-
-            tongCH = listCTKQ.Count;
-
-            foreach(var item in listCTKQ)
+            var isKetQua = _context.KetQuas.Where(u => u.MaBaiKiemTra == maBKT && u.MaSinhVien == maSV).FirstOrDefault();
+            if (isKetQua == null)
             {
-                int maCH = item.CauHoiMaCauHoi;
-                var cauhoi = _context.CauHois.SingleOrDefault(u => u.MaCauHoi == maCH);
-                if(item.DapAnSVChon == cauhoi.DapAn)
+                var listCTKQ = _context.CTKetQuas.Where(u => u.SinhVienMaSV == maSV && u.BaiKiemTraMaBaiKT == maBKT).ToList();
+
+                tongCH = listCTKQ.Count;
+
+                foreach (var item in listCTKQ)
                 {
-                    soCauDung++;
+                    int maCH = item.CauHoiMaCauHoi;
+                    var cauhoi = _context.CauHois.SingleOrDefault(u => u.MaCauHoi == maCH);
+                    if (item.DapAnSVChon == cauhoi.DapAn)
+                    {
+                        soCauDung++;
+                    }
                 }
+
+                soDiem = (float)Math.Round((double)100 / tongCH * soCauDung, 2);
+
+                KetQua ketQua = new KetQua
+                {
+                    MaSinhVien = maSV,
+                    MaBaiKiemTra = maBKT,
+                    Diem = soDiem,
+                    SoCauDung = soCauDung,
+                    TrangThai = true,
+                };
+
+                _context.KetQuas.Add(ketQua);
+                _context.SaveChanges();
+
+                var queryKQ = _context.KetQuas.FirstOrDefault(u => u.MaBaiKiemTra == maBKT && u.MaSinhVien == maSV && u.TrangThai);
+                return Ok(queryKQ);
             }
+            return BadRequest("Bài kiểm tra đã được tạo kq");
 
-            soDiem = (float)Math.Round((double)100 / tongCH * soCauDung , 2);
-
-            KetQua ketQua = new KetQua
-            {
-                MaSinhVien = maSV,
-                MaBaiKiemTra = maBKT,
-                Diem = soDiem,
-                SoCauDung = soCauDung,
-                TrangThai = true,
-            };
-
-            _context.KetQuas.Add(ketQua);
-            _context.SaveChanges();
-
-            var queryKQ = _context.KetQuas.FirstOrDefault(u => u.MaBaiKiemTra == maBKT && u.MaSinhVien == maSV && u.TrangThai);
-            
-            return Ok(queryKQ);
         }
 
         [HttpPost, Route("GetKQ")]
@@ -148,13 +152,13 @@ namespace Admin.ApiControllers
             int maSV = (int)val.MaSV;
             
             var query = this._context.CTBaiKTs.Where(u => u.MaBaiKT == maBaiKt).Join(this._context.CauHois,
-                b => b.CauHoi, c => c.MaCauHoi, (b, c) => new { b, c }).Select(m =>
+                b => b.CauHoi, c => c.MaCauHoi, (b, c) => new { b, c }).OrderBy(u => u.c.MaCauHoi).Select(m =>
                  new ChiTietJoinCauHoi
                  {
                      CauHoi = m.c,
                      CTBaiKT = m.b
                  });
-            var dsCauTraLoi = _context.CTKetQuas.Where(u => u.BaiKiemTraMaBaiKT == maBaiKt && u.SinhVienMaSV == maSV).Select(u => u.DapAnSVChon);
+            var dsCauTraLoi = _context.CTKetQuas.Where(u => u.BaiKiemTraMaBaiKT == maBaiKt && u.SinhVienMaSV == maSV).OrderBy(u => u.CauHoiMaCauHoi).Select(u => u.DapAnSVChon);
             return Ok(new { ChiTietBKT = query, DSCauTraLoi = dsCauTraLoi });
             //return Ok(dsCauTraLoi);
         }

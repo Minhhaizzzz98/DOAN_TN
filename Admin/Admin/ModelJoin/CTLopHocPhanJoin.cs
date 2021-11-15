@@ -11,5 +11,6 @@ namespace Admin.ModelJoin
         public SinhVien SinhVien { get; set; }
         public CTLopHP CTLopHP { get; set; }
         public LopHocPhan LopHocPhan { get; set; }
+        public TaiKhoan TaiKhoan { get; set; }
     }
 }

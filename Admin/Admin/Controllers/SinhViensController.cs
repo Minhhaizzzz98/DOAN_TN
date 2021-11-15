@@ -10,8 +10,6 @@ using Admin.Models;
 using Admin.ModelJoin;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using CsvHelper;
-using System.Globalization;
 using Microsoft.AspNetCore.Http;
 
 namespace Admin.Controllers

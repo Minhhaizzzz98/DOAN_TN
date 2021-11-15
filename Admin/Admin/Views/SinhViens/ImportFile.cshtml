@@ -1,0 +1,38 @@
+﻿@model Admin.Models.SinhVien
+
+@{
+    ViewData["Title"] = "ImportFile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Nhập danh sách sinh viên</h1>
+@using (Html.BeginForm("ImportFile", "SinhViens", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<div class="form-group">
+    <label class="control-label">Chọn file</label>
+    <input type="file" id="postedFile" name="postedFile" class="form-control" accept=".csv" />
+</div>
+
+    <div class="form-group">
+        <div class="form-group">
+
+            <label asp-for="Lop" class="control-label">Tên Lớp</label>
+
+            <select asp-for="Lop" id="Lop" class="form-control" asp-items="ViewBag.LopId">
+            </select>
+        </div>
+        <div class="form-group">
+            <br />
+            <input type="submit" title="Upload" value="Upload" class="btn btn-primary" />
+        </div>
+    </div>
+    <div class="form-group">
+
+        <div class="col-md-offset-3 col-md-10">
+            <br />
+            <span style="color:red;">
+                @ViewBag.Message
+            </span>
+        </div>
+    </div>
+}

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Admin.Models.BaiKiemTra>
+﻿@model IEnumerable<Admin.ModelJoin.BaiKiemTraJoinLopHocPhan>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,25 +13,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TenBaiKT)
+                @Html.DisplayNameFor(model => model.BaiKiemTra.TenBaiKT)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.KeyBaiKT)
+                @Html.DisplayNameFor(model => model.BaiKiemTra.KeyBaiKT)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Ngay)
+                @Html.DisplayNameFor(model => model.BaiKiemTra.Ngay)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaGiangVien)
+                @Html.DisplayNameFor(model => model.GiangVien.TenGiangVien)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MaLopHocPhan)
+                @Html.DisplayNameFor(model => model.LopHocPhan.TenLopHP)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
+                @Html.DisplayNameFor(model => model.BaiKiemTra.TrangThai)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ThoiGianLam)
+                @Html.DisplayNameFor(model => model.BaiKiemTra.ThoiGianLam)
             </th>
             <th></th>
         </tr>
@@ -40,22 +40,22 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TenBaiKT)
+                @Html.DisplayFor(modelItem => item.BaiKiemTra.TenBaiKT)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.KeyBaiKT)
+                @Html.DisplayFor(modelItem => item.BaiKiemTra.KeyBaiKT)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ngay)
+                @Html.DisplayFor(modelItem => item.BaiKiemTra.Ngay)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MaGiangVien)
+                @Html.DisplayFor(modelItem => item.GiangVien.TenGiangVien)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MaLopHocPhan)
+                @Html.DisplayFor(modelItem => item.LopHocPhan.TenLopHP)
             </td>
             <td>
-                @if (item.TrangThai)
+                @if (item.BaiKiemTra.TrangThai)
                 {
                     <button type="button" class="btn btn-success">Hoạt động</button>
                 }
@@ -65,16 +65,15 @@
                 }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ThoiGianLam)
+                @Html.DisplayFor(modelItem => item.BaiKiemTra.ThoiGianLam)
             </td>
             <td>
-                @if (!item.TrangThaiBatDau)
+                @if (!item.BaiKiemTra.TrangThaiBatDau)
                 {
-                    <a asp-action="Edit" asp-route-id="@item.MaBaiKT">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@item.MaBaiKT">Xóa</a>
+                    <a asp-action="Edit" asp-route-id="@item.BaiKiemTra.MaBaiKT">Sửa | </a> 
+                    <a asp-action="Delete" asp-route-id="@item.BaiKiemTra.MaBaiKT">Xóa | </a>
                 }
-                |
-                <a asp-action="Details" asp-route-id="@item.MaBaiKT">Chi tiết</a> |
+                <a asp-action="Details" asp-route-id="@item.BaiKiemTra.MaBaiKT">Chi tiết</a> |
             </td>
         </tr>
 }
